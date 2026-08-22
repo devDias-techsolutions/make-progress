@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0F0E0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Make Progress">
+
+<title>Make Progress</title>
+<link rel="manifest" href="manifest.json">
+
+<!-- Apple touch icon (iOS) -->
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0F0E0D;
+    color: #E8E4DE;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 32px 20px;
+    overflow: hidden;
+  }
+
+  /* ── Ícone ── */
+  .app-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .app-icon img { width: 100%; height: 100%; display: block; }
+
+  @keyframes iconPop {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* ── Nome ── */
+  .app-name {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  .app-name span { color: #7CAF7A; }
+
+  .app-tagline {
+    font-size: 0.85rem;
+    color: #8A847C;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 260px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { transform: translateY(12px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* ── Spinner / status ── */
+  .status-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+
+  .spinner {
+    width: 28px; height: 28px;
+    border: 2px solid #2E2B27;
+    border-top-color: #7CAF7A;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .status-msg {
+    font-size: 0.78rem;
+    color: #5A5550;
+    text-align: center;
+  }
+
+  /* ── Botão fallback (aparece se redirect demora) ── */
+  .btn-open {
+    display: none;
+    padding: 13px 28px;
+    background: #7CAF7A;
+    color: #0F0E0D;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  /* ── Dica de instalação (só aparece quando instalado como PWA) ── */
+  .install-hint {
+    display: none;
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1C1A18;
+    border: 1px solid #2E2B27;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 0.75rem;
+    color: #8A847C;
+    text-align: center;
+    white-space: nowrap;
+    animation: fadeUp 0.5s 1s ease both;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-icon">
+  <img src="icon-192.png" alt="Âncoras">
+</div>
+
+<div>
+  <div class="app-name">Make <span>Progress</span></div>
+</div>
+
+<div class="app-tagline">
+  Faça acontecer. — planejamento que sobrevive ao caos real.
+</div>
+
+<div class="status-row" id="statusRow">
+  <div class="spinner" id="spinner"></div>
+  <div class="status-msg" id="statusMsg">Abrindo o app...</div>
+</div>
+
+<a id="btnOpen" class="btn-open" href="#" target="_top">Abrir Âncoras →</a>
+
+<div class="install-hint" id="installHint">
+  Instalado como app ✓ — abrindo automaticamente
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIGURAÇÃO — troque pela URL do seu Web App GAS
+// ══════════════════════════════════════════════
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un7YqZYrG9vQLxv60RUppn9H9E-H4HiBF1Nu2M1S9U8T/exec';
+
+// ══════════════════════════════════════════════
+// REDIRECT
+// ══════════════════════════════════════════════
+(function() {
+  var btn    = document.getElementById('btnOpen');
+  var msg    = document.getElementById('statusMsg');
+  var spinner= document.getElementById('spinner');
+  var hint   = document.getElementById('installHint');
+
+  // Configura o botão de fallback com a URL correta
+  btn.href = GAS_URL;
+
+  // Detecta se está rodando como PWA instalado (standalone)
+  var isPWA = window.matchMedia('(display-mode: standalone)').matches
+           || window.navigator.standalone === true;
+
+  if (isPWA) {
+    hint.style.display = 'block';
+  }
+
+  // Redirect imediato
+  function doRedirect() {
+    try {
+      window.location.replace(GAS_URL);
+    } catch(e) {
+      window.location.href = GAS_URL;
+    }
+  }
+
+  // Se URL ainda é placeholder, mostra botão de configuração
+  if (GAS_URL.indexOf('COLE_AQUI') !== -1) {
+    spinner.style.display = 'none';
+    msg.textContent = 'URL do Web App não configurada ainda.';
+    msg.style.color = '#C4934A';
+    btn.textContent = 'Ver instruções de configuração';
+    btn.href = 'https://github.com';
+    btn.style.display = 'inline-block';
+    return;
+  }
+
+  // Redirect após splash de 800ms (feedback visual antes de sair)
+  setTimeout(doRedirect, 800);
+
+  // Botão de fallback aparece após 3s (caso redirect falhe)
+  setTimeout(function() {
+    spinner.style.display = 'none';
+    msg.textContent = 'Clique abaixo se não abrir automaticamente';
+    btn.style.display = 'inline-block';
+  }, 3000);
+})();
+
+// ── Service Worker (para PWA offline shell) ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function() {
+      // silencia erro se sw.js não existir — não é crítico
+    });
+  });
+}
+</script>
+</body>
+</html>
