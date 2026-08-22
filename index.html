@@ -217,7 +217,7 @@ var GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un
   var countdown = setInterval(function() {
     seconds--;
     if (seconds > 0) {
-      msg.textContent = 'Abrindo em ' + seconds + 's — ou instale primeiro via ⋮ → Adicionar à tela inicial';
+      msg.textContent = 'Abrindo em ' + seconds + 's';
     } else {
       clearInterval(countdown);
       doRedirect();
