@@ -162,7 +162,7 @@
 // ══════════════════════════════════════════════
 // CONFIGURAÇÃO — troque pela URL do seu Web App GAS
 // ══════════════════════════════════════════════
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un7YqZYrG9vQLxv60RUppn9H9E-H4HiBF1Nu2M1S9U8T/exec';
+var GAS_URL = 'COLE_AQUI_A_URL_DO_WEB_APP_GAS';
 
 // ══════════════════════════════════════════════
 // REDIRECT
@@ -204,15 +204,25 @@ var GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un
     return;
   }
 
-  // Redirect após splash de 800ms (feedback visual antes de sair)
-  setTimeout(doRedirect, 800);
+  // Mostra botão de instalar por 4s antes de redirecionar
+  // Dá tempo para o Chrome mostrar o banner de instalação PWA
+  spinner.style.display = 'none';
+  msg.textContent = 'Toque em ⋮ → "Adicionar à tela inicial" para instalar como app';
+  msg.style.color = '#7CAF7A';
+  btn.textContent = 'Abrir Make Progress →';
+  btn.style.display = 'inline-block';
 
-  // Botão de fallback aparece após 3s (caso redirect falhe)
-  setTimeout(function() {
-    spinner.style.display = 'none';
-    msg.textContent = 'Clique abaixo se não abrir automaticamente';
-    btn.style.display = 'inline-block';
-  }, 3000);
+  // Conta regressiva visível
+  var seconds = 5;
+  var countdown = setInterval(function() {
+    seconds--;
+    if (seconds > 0) {
+      msg.textContent = 'Abrindo em ' + seconds + 's — ou instale primeiro via ⋮ → Adicionar à tela inicial';
+    } else {
+      clearInterval(countdown);
+      doRedirect();
+    }
+  }, 1000);
 })();
 
 // ── Service Worker (para PWA offline shell) ──
