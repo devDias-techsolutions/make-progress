@@ -3,186 +3,341 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0F0E0D">
+<meta name="theme-color" content="#ffffff">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Make Progress">
 
 <title>Make Progress</title>
-<link rel="manifest" href="manifest.json">
 
-<!-- Apple touch icon (iOS) -->
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<!-- Fontes Premium -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192 (1).png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192 (1).png">
 
 <style>
+  :root {
+    --primary-dark: #1B3626;
+    --primary-muted: #5C7365;
+    --primary-btn: #234731;
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.9);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ── Estrutura Base ── */
   body {
-    background: #0F0E0D;
-    color: #E8E4DE;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Poppins', system-ui, sans-serif;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 24px;
-    padding: 32px 20px;
     overflow: hidden;
+    position: relative;
+    background-color: #f0f2f0;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Ícone ── */
-  .app-icon {
-    width: 96px;
-    height: 96px;
-    border-radius: 22px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-    animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  /* ── Background Botânico (Folhas) ── */
+  .bg-leaves {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Imagem de folhas tropicais escuras para contraste */
+    background: url('https://images.unsplash.com/photo-1534947933924-4f0147cb9bfa?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    z-index: 0;
   }
-  .app-icon img { width: 100%; height: 100%; display: block; }
-
-  @keyframes iconPop {
-    from { transform: scale(0.6); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-  }
-
-  /* ── Nome ── */
-  .app-name {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    animation: fadeUp 0.5s 0.1s ease both;
-  }
-  .app-name span { color: #7CAF7A; }
-
-  .app-tagline {
-    font-size: 0.85rem;
-    color: #8A847C;
-    text-align: center;
-    line-height: 1.5;
-    max-width: 260px;
-    animation: fadeUp 0.5s 0.2s ease both;
+  
+  /* Filtro escuro sobre as folhas para dar destaque ao centro */
+  .bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 20, 15, 0.3);
+    z-index: 1;
   }
 
-  @keyframes fadeUp {
-    from { transform: translateY(12px); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
+  /* ── Efeito Paper-cut (Camadas brancas) ── 
+     Usando valores fixos em pixels (px e vmin) garante que 
+     não estique ou quebre em telas largas (Desktop) */
+  .paper-layer {
+    position: absolute;
+    background: #ffffff;
+    z-index: 2;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    animation: floatShape 15s ease-in-out infinite alternate;
   }
 
-  /* ── Spinner / status ── */
-  .status-row {
+  /* Top Left Layers */
+  .layer-tl-3 { top: -20vmin; left: -20vmin; width: 60vmin; height: 60vmin; min-width: 400px; min-height: 400px; background: rgba(255,255,255,0.4); filter: drop-shadow(5px 5px 20px rgba(0,0,0,0.4)); z-index: 2; }
+  .layer-tl-2 { top: -25vmin; left: -25vmin; width: 65vmin; height: 65vmin; min-width: 450px; min-height: 450px; background: rgba(245,247,245,0.9); filter: drop-shadow(3px 3px 15px rgba(0,0,0,0.3)); z-index: 3; border-radius: 50% 50% 60% 40% / 40% 60% 50% 50%;}
+  .layer-tl-1 { top: -30vmin; left: -30vmin; width: 70vmin; height: 70vmin; min-width: 500px; min-height: 500px; background: #ffffff; filter: drop-shadow(2px 2px 10px rgba(0,0,0,0.15)); z-index: 4; }
+
+  /* Bottom Right Layers */
+  .layer-br-3 { bottom: -20vmin; right: -20vmin; width: 65vmin; height: 65vmin; min-width: 450px; min-height: 450px; background: rgba(255,255,255,0.4); filter: drop-shadow(-5px -5px 20px rgba(0,0,0,0.4)); z-index: 2; border-radius: 30% 70% 50% 50% / 50% 40% 60% 50%;}
+  .layer-br-2 { bottom: -25vmin; right: -25vmin; width: 70vmin; height: 70vmin; min-width: 500px; min-height: 500px; background: rgba(245,247,245,0.9); filter: drop-shadow(-3px -3px 15px rgba(0,0,0,0.3)); z-index: 3; }
+  .layer-br-1 { bottom: -30vmin; right: -30vmin; width: 75vmin; height: 75vmin; min-width: 550px; min-height: 550px; background: #ffffff; filter: drop-shadow(-2px -2px 10px rgba(0,0,0,0.15)); z-index: 4; }
+
+  /* ── Layout Principal (Prevenindo quebra de texto) ── */
+  .main-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 360px;
+    padding: 20px;
+    /* Adiciona margem no topo para acomodar o ícone flutuante */
+    margin-top: 60px; 
+  }
+
+  /* ── Glassmorphism Card ── */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid var(--glass-border);
+    border-radius: 36px;
+    padding: 0 32px 40px 32px; /* Topo zero para o ícone */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    animation: fadeUp 0.5s 0.3s ease both;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2), inset 0 2px 20px rgba(255,255,255,0.8);
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ── Ícone Flutuante com o Logo do App ── */
+  .app-icon-wrapper {
+    width: 96px;
+    height: 96px;
+    /* Puxa o ícone pra cima, metade dentro e metade fora do card */
+    margin-top: -48px; 
+    margin-bottom: 24px;
+    border-radius: 26px;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.3), 0 4px 16px rgba(124, 175, 122, 0.2);
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px; /* Espessura da borda animada */
+    overflow: hidden;
+    animation: iconPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+    z-index: 2;
+  }
+
+  /* Fundo em gradiente giratório da borda */
+  .app-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: conic-gradient(
+      from 0deg, 
+      transparent 50%, 
+      rgba(255,255,255,0.4) 80%, 
+      #7CAF7A 100%
+    );
+    animation: rotateBorder 3s linear infinite;
+    z-index: -1;
+  }
+  
+  .app-icon-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 23px; /* Um pouco menor que o wrapper para encaixar dentro do padding */
+    background: #0F0E0D;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Brilho interno do ícone (reflexo de vidro superior) */
+  .app-icon-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 23px;
+    box-shadow: inset 0 2px 8px rgba(255,255,255,0.4);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ── Tipografia ── */
+  .app-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .app-subtitle {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--primary-muted);
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  /* ── Falso Input (Área de Status) ── */
+  /* Modelado exatamente como os campos "Login/Password" da sua referência */
+  .status-input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .status-box {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+    transition: all 0.3s;
   }
 
   .spinner {
-    width: 28px; height: 28px;
-    border: 2px solid #2E2B27;
-    border-top-color: #7CAF7A;
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(27, 54, 38, 0.15);
+    border-top-color: var(--primary-dark);
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    flex-shrink: 0;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
   .status-msg {
-    font-size: 0.78rem;
-    color: #5A5550;
-    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* ── Botão fallback (aparece se redirect demora) ── */
-  .btn-open {
+  /* ── Botão Premium ── */
+  .btn-primary {
     display: none;
-    padding: 13px 28px;
-    background: #7CAF7A;
-    color: #0F0E0D;
-    font-size: 0.9rem;
-    font-weight: 700;
+    width: 100%;
+    padding: 18px 24px;
+    background: var(--primary-btn);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     cursor: pointer;
     text-decoration: none;
-    letter-spacing: 0.02em;
-    animation: fadeUp 0.4s ease both;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 24px rgba(35, 71, 49, 0.35);
+  }
+  
+  .btn-primary:hover, .btn-primary:active {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(35, 71, 49, 0.45);
+    background: var(--primary-dark);
   }
 
-  /* ── Dica de instalação (só aparece quando instalado como PWA) ── */
-  .install-hint {
-    display: none;
-    position: fixed;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1C1A18;
-    border: 1px solid #2E2B27;
-    border-radius: 10px;
-    padding: 12px 18px;
-    font-size: 0.75rem;
-    color: #8A847C;
-    text-align: center;
-    white-space: nowrap;
-    animation: fadeUp 0.5s 1s ease both;
+  /* ── Animações ── */
+  @keyframes iconPop {
+    0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
   }
+  @keyframes fadeUp {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes spin { 
+    to { transform: rotate(360deg); } 
+  }
+  @keyframes floatShape {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(2%, 2%) rotate(2deg); }
+  }
+  @keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
 </style>
 </head>
 <body>
 
-<div class="app-icon">
-  <img src="icon-192.png" alt="Âncoras">
-</div>
+<!-- Imagem botânica com sobreposição -->
+<div class="bg-leaves"></div>
+<div class="bg-overlay"></div>
 
-<div>
-  <div class="app-name">Make <span>Progress</span></div>
-</div>
+<!-- Camadas Paper-cut Superiores (Valores absolutos = não quebra no PC) -->
+<div class="paper-layer layer-tl-3"></div>
+<div class="paper-layer layer-tl-2"></div>
+<div class="paper-layer layer-tl-1"></div>
 
-<div class="app-tagline">
-  Faça acontecer.
-</div>
+<!-- Camadas Paper-cut Inferiores -->
+<div class="paper-layer layer-br-3"></div>
+<div class="paper-layer layer-br-2"></div>
+<div class="paper-layer layer-br-1"></div>
 
-<div class="status-row" id="statusRow">
-  <div class="spinner" id="spinner"></div>
-  <div class="status-msg" id="statusMsg">Abrindo o app...</div>
-</div>
 
-<a id="btnOpen" class="btn-open" href="#" target="_top">Abrir Make Progress →</a>
+<!-- Contêiner Principal Flexível -->
+<main class="main-content">
+  <div class="glass-card">
+    
+    <!-- Ícone que atravessa a borda -->
+    <div class="app-icon-wrapper">
+      <img src="icon-192 (1).png" alt="Make Progress Logo">
+    </div>
+
+    <!-- Textos empilhados com segurança -->
+    <h1 class="app-title">Make Progress</h1>
+    <p class="app-subtitle">Faça acontecer.</p>
+
+    <!-- UI imitando campos de input -->
+    <div class="status-input-group">
+      <div class="status-box" id="statusContainer">
+        <div class="spinner" id="spinner"></div>
+        <div class="status-msg" id="statusMsg">Autenticando...</div>
+      </div>
+    </div>
+
+    <a id="btnOpen" class="btn-primary" href="#" target="_top">Acessar App</a>
+    
+  </div>
+</main>
 
 
 <script>
 // ══════════════════════════════════════════════
-// CONFIGURAÇÃO — troque pela URL do seu Web App GAS
+// CONFIGURAÇÃO — URL do Web App GAS
 // ══════════════════════════════════════════════
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un7YqZYrG9vQLxv60RUppn9H9E-H4HiBF1Nu2M1S9U8T/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un7YqZYrG9vQLxv60RUppn9H9E-H4HiBF1Nu2M1S9U8T/exec';
 
 // ══════════════════════════════════════════════
-// REDIRECT
+// LÓGICA DE REDIRECIONAMENTO & UX
 // ══════════════════════════════════════════════
 (function() {
-  var btn    = document.getElementById('btnOpen');
-  var msg    = document.getElementById('statusMsg');
-  var spinner= document.getElementById('spinner');
-  var hint   = document.getElementById('installHint');
+  const btn = document.getElementById('btnOpen');
+  const msg = document.getElementById('statusMsg');
+  const spinner = document.getElementById('spinner');
 
-  // Configura o botão de fallback com a URL correta
   btn.href = GAS_URL;
 
-  // Detecta se está rodando como PWA instalado (standalone)
-  var isPWA = window.matchMedia('(display-mode: standalone)').matches
-           || window.navigator.standalone === true;
+  // Detecção de PWA (Standalone mode)
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-  if (isPWA) {
-    hint.style.display = 'block';
-  }
-
-  // Redirect imediato
-  function doRedirect() {
+  function executeRedirect() {
     try {
       window.location.replace(GAS_URL);
     } catch(e) {
@@ -190,43 +345,56 @@ var GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un
     }
   }
 
-  // Se URL ainda é placeholder, mostra botão de configuração
-  if (GAS_URL.indexOf('COLE_AQUI') !== -1) {
+  // Verifica se a URL foi configurada
+  if (GAS_URL.includes('COLE_AQUI')) {
     spinner.style.display = 'none';
-    msg.textContent = 'URL do Web App não configurada ainda.';
-    msg.style.color = '#C4934A';
-    btn.textContent = 'Ver instruções de configuração';
-    btn.href = 'https://github.com';
-    btn.style.display = 'inline-block';
+    msg.textContent = 'App não configurado.';
+    msg.style.color = '#B91C1C'; 
+    btn.textContent = 'Verificar Configuração';
+    btn.style.display = 'block';
     return;
   }
 
-  // Mostra botão de instalar por 4s antes de redirecionar
-  // Dá tempo para o Chrome mostrar o banner de instalação PWA
-  spinner.style.display = 'none';
-  msg.textContent = 'Toque em ⋮ → "Adicionar à tela inicial" para instalar como app';
-  msg.style.color = '#7CAF7A';
-  btn.textContent = 'Abrir Make Progress →';
-  btn.style.display = 'inline-block';
-
-  // Conta regressiva visível
-  var seconds = 5;
-  var countdown = setInterval(function() {
-    seconds--;
-    if (seconds > 0) {
-      msg.textContent = 'Abrindo em ' + seconds + 's';
+  // UX de carregamento com design imitando formulário
+  setTimeout(() => {
+    spinner.style.display = 'none';
+    
+    if (!isPWA) {
+      msg.textContent = 'Instale na tela inicial';
     } else {
-      clearInterval(countdown);
-      doRedirect();
+      msg.textContent = 'Ambiente verificado';
     }
-  }, 1000);
+
+    btn.style.display = 'block';
+    
+    let seconds = 5;
+    const updateButtonText = () => {
+      btn.textContent = `Acessar App (${seconds}s)`;
+    };
+    
+    updateButtonText();
+    
+    const countdown = setInterval(() => {
+      seconds--;
+      if (seconds > 0) {
+        updateButtonText();
+      } else {
+        clearInterval(countdown);
+        btn.textContent = 'Redirecionando...';
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
+        executeRedirect();
+      }
+    }, 1000);
+    
+  }, 1800); 
 })();
 
-// ── Service Worker (para PWA offline shell) ──
+// ── Service Worker ──
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').catch(function() {
-      // silencia erro se sw.js não existir — não é crítico
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {
+      // Falha silenciosa em dev
     });
   });
 }
