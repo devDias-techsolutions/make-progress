@@ -11,29 +11,26 @@
 
 <title>Make Progress</title>
 
-<!-- Fontes Premium -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192 (1).png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192 (1).png">
 
 <style>
   :root {
-    --primary-dark: #1B3626;
-    --primary-muted: #5C7365;
-    --primary-btn: #234731;
-    --glass-bg: rgba(255, 255, 255, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.9);
+    --text-main: #1A201C;
+    --text-muted: #6B7B72;
+    --btn-bg: #3F574A; 
+    --border-color: #B5C2BB; 
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── Estrutura Base ── */
   body {
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -41,282 +38,229 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
-    background-color: #f0f2f0;
+    background-color: #ffffff;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Background Botânico (Folhas) ── */
+  /* Fundo com as folhas botânicas escuras */
   .bg-leaves {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    /* Imagem de folhas tropicais escuras para contraste */
-    background: url('https://images.unsplash.com/photo-1534947933924-4f0147cb9bfa?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    z-index: 0;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1542332606-bbf9304323fc?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+    z-index: 1;
+    filter: brightness(0.9);
   }
-  
-  /* Filtro escuro sobre as folhas para dar destaque ao centro */
-  .bg-overlay {
+
+  /* Camada SVG para o efeito Paper-cut 3D com corte diagonal orgânico */
+  .paper-cut-layer {
     position: absolute;
     inset: 0;
-    background: rgba(10, 20, 15, 0.3);
-    z-index: 1;
-  }
-
-  /* ── Efeito Paper-cut (Camadas brancas) ── 
-     Usando valores fixos em pixels (px e vmin) garante que 
-     não estique ou quebre em telas largas (Desktop) */
-  .paper-layer {
-    position: absolute;
-    background: #ffffff;
+    width: 100vw;
+    height: 100vh;
     z-index: 2;
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    animation: floatShape 15s ease-in-out infinite alternate;
+    pointer-events: none;
   }
 
-  /* Top Left Layers */
-  .layer-tl-3 { top: -20vmin; left: -20vmin; width: 60vmin; height: 60vmin; min-width: 400px; min-height: 400px; background: rgba(255,255,255,0.4); filter: drop-shadow(5px 5px 20px rgba(0,0,0,0.4)); z-index: 2; }
-  .layer-tl-2 { top: -25vmin; left: -25vmin; width: 65vmin; height: 65vmin; min-width: 450px; min-height: 450px; background: rgba(245,247,245,0.9); filter: drop-shadow(3px 3px 15px rgba(0,0,0,0.3)); z-index: 3; border-radius: 50% 50% 60% 40% / 40% 60% 50% 50%;}
-  .layer-tl-1 { top: -30vmin; left: -30vmin; width: 70vmin; height: 70vmin; min-width: 500px; min-height: 500px; background: #ffffff; filter: drop-shadow(2px 2px 10px rgba(0,0,0,0.15)); z-index: 4; }
+  svg.paper-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 
-  /* Bottom Right Layers */
-  .layer-br-3 { bottom: -20vmin; right: -20vmin; width: 65vmin; height: 65vmin; min-width: 450px; min-height: 450px; background: rgba(255,255,255,0.4); filter: drop-shadow(-5px -5px 20px rgba(0,0,0,0.4)); z-index: 2; border-radius: 30% 70% 50% 50% / 50% 40% 60% 50%;}
-  .layer-br-2 { bottom: -25vmin; right: -25vmin; width: 70vmin; height: 70vmin; min-width: 500px; min-height: 500px; background: rgba(245,247,245,0.9); filter: drop-shadow(-3px -3px 15px rgba(0,0,0,0.3)); z-index: 3; }
-  .layer-br-1 { bottom: -30vmin; right: -30vmin; width: 75vmin; height: 75vmin; min-width: 550px; min-height: 550px; background: #ffffff; filter: drop-shadow(-2px -2px 10px rgba(0,0,0,0.15)); z-index: 4; }
-
-  /* ── Layout Principal (Prevenindo quebra de texto) ── */
-  .main-content {
+  /* Container principal centralizado */
+  .main-wrapper {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 360px;
-    padding: 20px;
-    /* Adiciona margem no topo para acomodar o ícone flutuante */
-    margin-top: 60px; 
+    max-width: 380px;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
   }
 
-  /* ── Glassmorphism Card ── */
+  /* Cartão de vidro fosco (Glassmorphism) com micro-flutuação */
   .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1.5px solid var(--glass-border);
-    border-radius: 36px;
-    padding: 0 32px 40px 32px; /* Topo zero para o ícone */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 40px;
+    padding: 48px 32px 40px 32px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2), inset 0 2px 20px rgba(255,255,255,0.8);
-    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    box-shadow: 
+      0 35px 70px rgba(0, 0, 0, 0.16), 
+      inset 0 4px 20px rgba(255, 255, 255, 0.85);
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both, floatCard 6s ease-in-out infinite 1s;
   }
 
-  /* ── Ícone Flutuante com o Logo do App ── */
-  .app-icon-wrapper {
-    width: 96px;
-    height: 96px;
-    /* Puxa o ícone pra cima, metade dentro e metade fora do card */
-    margin-top: -48px; 
-    margin-bottom: 24px;
-    border-radius: 26px;
-    box-shadow: 0 16px 32px rgba(0,0,0,0.3), 0 4px 16px rgba(124, 175, 122, 0.2);
+  /* Ícone com micro-movimentação de respiração (sem rotação cafona) */
+  .app-icon-container {
     position: relative;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3px; /* Espessura da borda animada */
-    overflow: hidden;
-    animation: iconPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+    width: 84px;
+    height: 84px;
+    margin-bottom: 24px;
+    border-radius: 22px;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(124,175,122,0.4));
+    box-shadow: 0 12px 30px rgba(63, 87, 74, 0.25);
+    animation: iconBreath 4s ease-in-out infinite;
+  }
+
+  .app-icon-container::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 20px;
+    box-shadow: inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 6px rgba(0,0,0,0.15);
+    pointer-events: none;
     z-index: 2;
   }
 
-  /* Fundo em gradiente giratório da borda */
-  .app-icon-wrapper::before {
-    content: '';
-    position: absolute;
-    width: 150%;
-    height: 150%;
-    background: conic-gradient(
-      from 0deg, 
-      transparent 50%, 
-      rgba(255,255,255,0.4) 80%, 
-      #7CAF7A 100%
-    );
-    animation: rotateBorder 3s linear infinite;
-    z-index: -1;
-  }
-  
-  .app-icon-wrapper img {
+  .app-icon-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    border-radius: 23px; /* Um pouco menor que o wrapper para encaixar dentro do padding */
-    background: #0F0E0D;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Brilho interno do ícone (reflexo de vidro superior) */
-  .app-icon-wrapper::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border-radius: 23px;
-    box-shadow: inset 0 2px 8px rgba(255,255,255,0.4);
-    pointer-events: none;
-    z-index: 3;
-  }
-
-  /* ── Tipografia ── */
-  .app-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-dark);
-    letter-spacing: -0.02em;
-    margin-bottom: 4px;
-    text-align: center;
-  }
-
-  .app-subtitle {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--primary-muted);
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  /* ── Falso Input (Área de Status) ── */
-  /* Modelado exatamente como os campos "Login/Password" da sua referência */
-  .status-input-group {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .status-box {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 20px;
-    padding: 16px 20px;
+    display: block;
+  }
+
+  .title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    font-weight: 500;
+  }
+
+  /* Caixa de Status simulando um campo de input elegante */
+  .status-input-pill {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
-    transition: all 0.3s;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  .status-text {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    font-weight: 600;
   }
 
   .spinner {
-    width: 20px;
-    height: 20px;
-    border: 2.5px solid rgba(27, 54, 38, 0.15);
-    border-top-color: var(--primary-dark);
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--btn-bg);
     border-radius: 50%;
-    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    flex-shrink: 0;
+    animation: spin 0.8s linear infinite;
   }
 
-  .status-msg {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--primary-dark);
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* ── Botão Premium ── */
+  /* Botão verde escuro premium */
   .btn-primary {
     display: none;
     width: 100%;
-    padding: 18px 24px;
-    background: var(--primary-btn);
+    background: var(--btn-bg);
     color: #ffffff;
-    font-size: 1rem;
     font-weight: 600;
+    font-size: 0.95rem;
     text-align: center;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
+    padding: 16px;
+    border-radius: 24px;
     text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 24px rgba(35, 71, 49, 0.35);
+    box-shadow: 0 10px 24px rgba(63, 87, 74, 0.35);
+    transition: transform 0.3s, box-shadow 0.3s;
   }
-  
-  .btn-primary:hover, .btn-primary:active {
+
+  .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(35, 71, 49, 0.45);
-    background: var(--primary-dark);
+    box-shadow: 0 14px 28px rgba(63, 87, 74, 0.45);
   }
 
-  /* ── Animações ── */
-  @keyframes iconPop {
-    0% { transform: scale(0.8) translateY(20px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
-  }
   @keyframes fadeUp {
-    0% { transform: translateY(30px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
-  @keyframes spin { 
-    to { transform: rotate(360deg); } 
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
   }
-  @keyframes floatShape {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(2%, 2%) rotate(2deg); }
+  @keyframes iconBreath {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
   }
-  @keyframes rotateBorder {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
-
 </style>
 </head>
 <body>
 
-<!-- Imagem botânica com sobreposição -->
 <div class="bg-leaves"></div>
-<div class="bg-overlay"></div>
 
-<!-- Camadas Paper-cut Superiores (Valores absolutos = não quebra no PC) -->
-<div class="paper-layer layer-tl-3"></div>
-<div class="paper-layer layer-tl-2"></div>
-<div class="paper-layer layer-tl-1"></div>
+<!-- Efeito Paper-Cut 3D com corte diagonal acentuado e sombras profundas -->
+<div class="paper-cut-layer">
+  <svg class="paper-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Sombras pesadas e direcionadas na diagonal para realismo fotográfico 3D -->
+      <filter id="shadow-deep" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="15" dy="25" stdDeviation="18" flood-color="#020804" flood-opacity="0.85"/>
+      </filter>
+      <filter id="shadow-mid" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="10" dy="15" stdDeviation="12" flood-color="#020804" flood-opacity="0.65"/>
+      </filter>
+      <filter id="shadow-light" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="5" dy="8" stdDeviation="8" flood-color="#020804" flood-opacity="0.4"/>
+      </filter>
+    </defs>
 
-<!-- Camadas Paper-cut Inferiores -->
-<div class="paper-layer layer-br-3"></div>
-<div class="paper-layer layer-br-2"></div>
-<div class="paper-layer layer-br-1"></div>
+    <!-- Camada 1: Sombra e corte mais fundo (diagonal superior direita para inferior esquerda) -->
+    <path d="M-100,-100 L1100,-200 C1100,-200 900,400 650,650 C400,900 -200,1100 -200,1100 L-100,1100 Z" fill="#d4ded7" filter="url(#shadow-deep)"/>
+    
+    <!-- Camada 2: Corte intermediário com recortes simulando folhas -->
+    <path d="M-100,-100 L1000,-150 C1000,-150 820,350 580,590 C340,830 -150,1050 -150,1050 L-100,1100 Z" fill="#ebf0ed" filter="url(#shadow-mid)"/>
+    
+    <!-- Camada 3: Superfície de papel branco principal com curvas diagonais refinadas -->
+    <path d="M-100,-100 L880,-100 C880,-100 740,300 500,540 C260,780 -100,1000 -100,1000 Z" fill="#ffffff" filter="url(#shadow-light)"/>
+  </svg>
+</div>
 
-
-<!-- Contêiner Principal Flexível -->
-<main class="main-content">
+<!-- Interface do Aplicativo -->
+<main class="main-wrapper">
   <div class="glass-card">
     
-    <!-- Ícone que atravessa a borda -->
-    <div class="app-icon-wrapper">
-      <img src="icon-192.png" alt="Make Progress Logo">
+    <!-- Ícone com borda reflexiva e micro-respiração -->
+    <div class="app-icon-container">
+      <img src="icon-192 (1).png" alt="App Logo" onerror="this.style.display='none'">
     </div>
 
-    <!-- Textos empilhados com segurança -->
-    <h1 class="app-title">Make Progress</h1>
-    <p class="app-subtitle">Faça acontecer.</p>
+    <h1 class="title">Make Progress</h1>
+    <p class="subtitle">Faça acontecer.</p>
 
-    <!-- UI imitando campos de input -->
-    <div class="status-input-group">
-      <div class="status-box" id="statusContainer">
-        <div class="spinner" id="spinner"></div>
-        <div class="status-msg" id="statusMsg">Autenticando...</div>
-      </div>
+    <div class="status-input-pill">
+      <span class="status-text" id="statusMsg">Autenticando...</span>
+      <div class="spinner" id="spinner"></div>
     </div>
 
     <a id="btnOpen" class="btn-primary" href="#" target="_top">Acessar App</a>
-    
+
   </div>
 </main>
-
 
 <script>
 // ══════════════════════════════════════════════
@@ -324,9 +268,6 @@
 // ══════════════════════════════════════════════
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7un7YqZYrG9vQLxv60RUppn9H9E-H4HiBF1Nu2M1S9U8T/exec';
 
-// ══════════════════════════════════════════════
-// LÓGICA DE REDIRECIONAMENTO & UX
-// ══════════════════════════════════════════════
 (function() {
   const btn = document.getElementById('btnOpen');
   const msg = document.getElementById('statusMsg');
@@ -334,7 +275,6 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
 
   btn.href = GAS_URL;
 
-  // Detecção de PWA (Standalone mode)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   function executeRedirect() {
@@ -345,29 +285,27 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
     }
   }
 
-  // Verifica se a URL foi configurada
   if (GAS_URL.includes('COLE_AQUI')) {
     spinner.style.display = 'none';
     msg.textContent = 'App não configurado.';
-    msg.style.color = '#B91C1C'; 
-    btn.textContent = 'Verificar Configuração';
+    msg.style.color = '#D97706';
+    btn.textContent = 'Configurar agora';
     btn.style.display = 'block';
     return;
   }
 
-  // UX de carregamento com design imitando formulário
   setTimeout(() => {
     spinner.style.display = 'none';
     
     if (!isPWA) {
-      msg.textContent = 'Instale na tela inicial';
+      msg.textContent = 'Adicione à tela inicial';
     } else {
       msg.textContent = 'Ambiente verificado';
     }
 
     btn.style.display = 'block';
     
-    let seconds = 5;
+    let seconds = 4;
     const updateButtonText = () => {
       btn.textContent = `Acessar App (${seconds}s)`;
     };
@@ -387,15 +325,12 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
       }
     }, 1000);
     
-  }, 1800); 
+  }, 1200);
 })();
 
-// ── Service Worker ──
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {
-      // Falha silenciosa em dev
-    });
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
 </script>
