@@ -21,13 +21,17 @@
 
 <style>
   :root {
-    --text-main: #1A201C;
-    --text-muted: #6B7B72;
-    --btn-bg: #3F574A; 
-    --border-color: #B5C2BB; 
+    --text-main: #18211D;
+    --text-muted: #66756D;
+    --accent: #3997BE;
+    --accent-2: #58B7A2;
+    --btn-bg: #183F4D;
+    --border: rgba(255,255,255,.72);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { width: 100%; min-height: 100%; }
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -38,26 +42,47 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
-    background-color: #ffffff;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(88,183,162,.20), transparent 30%),
+      radial-gradient(circle at 82% 78%, rgba(57,151,190,.18), transparent 34%),
+      linear-gradient(135deg, #eef6f2 0%, #f8fbfa 48%, #edf6fa 100%);
+    color: var(--text-main);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Fundo com as folhas botânicas escuras */
+  /* Fundo orgânico, agora mais leve e coerente com o visual atual do Make Progress */
   .bg-leaves {
     position: absolute;
-    inset: 0;
+    inset: -8%;
     background: url('https://images.unsplash.com/photo-1542332606-bbf9304323fc?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
     z-index: 1;
-    filter: brightness(0.9);
+    opacity: .20;
+    filter: saturate(.75) brightness(1.08);
+    transform: scale(1.04);
   }
 
-  /* Camada SVG para o efeito Paper-cut 3D com corte diagonal orgânico */
+  .bg-glow {
+    position: absolute;
+    width: 42vw;
+    height: 42vw;
+    min-width: 280px;
+    min-height: 280px;
+    max-width: 620px;
+    max-height: 620px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.78) 0%, rgba(255,255,255,0) 70%);
+    z-index: 2;
+    pointer-events: none;
+    filter: blur(4px);
+  }
+
+  /* Camadas de profundidade */
   .paper-cut-layer {
     position: absolute;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
   }
 
@@ -67,57 +92,76 @@
     display: block;
   }
 
-  /* Container principal centralizado */
   .main-wrapper {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 380px;
+    max-width: 400px;
     padding: 24px;
     display: flex;
     justify-content: center;
   }
 
-  /* Cartão de vidro fosco (Glassmorphism) com micro-flutuação */
+  /* Superfície premium — mais leve, orgânica e sem aparência de borda pesada */
   .glass-card {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1.5px solid rgba(255, 255, 255, 0.95);
-    border-radius: 40px;
-    padding: 48px 32px 40px 32px;
+    position: relative;
+    background:
+      linear-gradient(145deg, rgba(255,255,255,.80), rgba(255,255,255,.57));
+    backdrop-filter: blur(30px) saturate(125%);
+    -webkit-backdrop-filter: blur(30px) saturate(125%);
+    border: 1px solid var(--border);
+    border-radius: 38px 38px 48px 30px;
+    padding: 42px 32px 34px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 
-      0 35px 70px rgba(0, 0, 0, 0.16), 
-      inset 0 4px 20px rgba(255, 255, 255, 0.85);
-    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both, floatCard 6s ease-in-out infinite 1s;
+    box-shadow:
+      0 34px 80px rgba(24,63,77,.16),
+      0 8px 26px rgba(24,63,77,.08),
+      inset 0 1px 0 rgba(255,255,255,.95),
+      inset 0 -1px 0 rgba(255,255,255,.28);
+    animation:
+      fadeUp .8s cubic-bezier(.16,1,.3,1) .15s both,
+      floatCard 7s ease-in-out 1s infinite;
   }
 
-  /* Ícone com micro-movimentação de respiração */
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: -70px;
+    right: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(88,183,162,.22), transparent 68%);
+    pointer-events: none;
+  }
+
+  /* Ícone oficial do aplicativo */
   .app-icon-container {
     position: relative;
-    width: 84px;
-    height: 84px;
-    margin-bottom: 24px;
-    border-radius: 22px;
-    background: #1A201C;
-    box-shadow: 0 12px 30px rgba(63, 87, 74, 0.35);
-    animation: iconBreath 4s ease-in-out infinite;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 96px;
+    height: 96px;
+    margin-bottom: 22px;
+    border-radius: 27px;
     overflow: hidden;
+    flex: 0 0 auto;
+    background: transparent;
+    box-shadow:
+      0 18px 38px rgba(37,105,128,.20),
+      0 5px 14px rgba(37,105,128,.10);
+    animation: iconBreath 4.5s ease-in-out infinite;
   }
 
   .app-icon-container::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 22px;
-    box-shadow: inset 0 2px 10px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4);
+    border-radius: inherit;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.52),
+      inset 0 -2px 8px rgba(0,0,0,.10);
     pointer-events: none;
     z-index: 2;
   }
@@ -126,52 +170,44 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 22px;
+    border-radius: inherit;
     display: block;
   }
 
-  /* Fallback SVG refinado caso a imagem local não seja encontrada no preview */
-  .app-icon-fallback {
-    display: none;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    background: #1A201C;
-    color: #7CAF7A;
-  }
-
   .title {
-    font-size: 1.7rem;
+    font-size: 1.72rem;
+    line-height: 1.15;
     font-weight: 700;
     color: var(--text-main);
-    letter-spacing: -0.03em;
-    margin-bottom: 4px;
+    letter-spacing: -.035em;
+    margin-bottom: 6px;
   }
 
   .subtitle {
-    font-size: 0.9rem;
+    font-size: .9rem;
     color: var(--text-muted);
-    margin-bottom: 36px;
+    margin-bottom: 30px;
     font-weight: 500;
+    letter-spacing: -.01em;
   }
 
-  /* Caixa de Status simulando um campo de input elegante */
   .status-input-pill {
     width: 100%;
-    border: 1px solid var(--border-color);
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 24px;
-    padding: 14px 20px;
+    border: 1px solid rgba(117,145,135,.22);
+    background: rgba(255,255,255,.46);
+    border-radius: 22px;
+    padding: 13px 17px 13px 19px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+    margin-bottom: 18px;
+    box-shadow:
+      inset 0 1px 3px rgba(24,63,77,.035),
+      0 5px 16px rgba(24,63,77,.035);
   }
 
   .status-text {
-    font-size: 0.85rem;
+    font-size: .82rem;
     color: var(--text-main);
     font-weight: 600;
   }
@@ -179,88 +215,128 @@
   .spinner {
     width: 18px;
     height: 18px;
-    border: 2px solid var(--border-color);
-    border-top-color: var(--btn-bg);
+    border: 2px solid rgba(57,151,190,.20);
+    border-top-color: var(--accent);
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: spin .8s linear infinite;
+    flex: 0 0 auto;
   }
 
-  /* Botão verde escuro premium */
   .btn-primary {
     display: none;
     width: 100%;
-    background: var(--btn-bg);
-    color: #ffffff;
+    background: linear-gradient(135deg, #183F4D 0%, #225B68 100%);
+    color: #fff;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: .94rem;
     text-align: center;
-    padding: 16px;
-    border-radius: 24px;
+    padding: 15px 16px;
+    border-radius: 21px;
     text-decoration: none;
-    box-shadow: 0 10px 24px rgba(63, 87, 74, 0.35);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 12px 26px rgba(24,63,77,.24);
+    transition: transform .25s ease, box-shadow .25s ease, opacity .25s ease;
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(63, 87, 74, 0.45);
+    box-shadow: 0 16px 32px rgba(24,63,77,.30);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
   }
 
   @keyframes fadeUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(30px) scale(.985); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
   }
+
   @keyframes floatCard {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    50% { transform: translateY(-5px); }
   }
+
   @keyframes iconBreath {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.03); }
+    50% { transform: scale(1.025); }
   }
+
   @keyframes spin {
     to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 520px) {
+    .main-wrapper { max-width: 390px; padding: 18px; }
+
+    .glass-card {
+      border-radius: 32px 32px 42px 26px;
+      padding: 34px 24px 28px;
+    }
+
+    .app-icon-container {
+      width: 88px;
+      height: 88px;
+      border-radius: 25px;
+      margin-bottom: 20px;
+    }
+
+    .title { font-size: 1.58rem; }
+    .subtitle { margin-bottom: 25px; }
+
+    .paper-cut-layer { opacity: .72; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glass-card,
+    .app-icon-container,
+    .spinner {
+      animation: none !important;
+    }
   }
 </style>
 </head>
 <body>
 
 <div class="bg-leaves"></div>
+<div class="bg-glow"></div>
 
-<!-- Efeito Paper-Cut 3D com corte diagonal acentuado e sombras profundas -->
 <div class="paper-cut-layer">
   <svg class="paper-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <filter id="shadow-deep" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="15" dy="25" stdDeviation="18" flood-color="#020804" flood-opacity="0.85"/>
+        <feDropShadow dx="15" dy="25" stdDeviation="18" flood-color="#16332b" flood-opacity=".30"/>
       </filter>
       <filter id="shadow-mid" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="10" dy="15" stdDeviation="12" flood-color="#020804" flood-opacity="0.65"/>
+        <feDropShadow dx="10" dy="15" stdDeviation="12" flood-color="#16332b" flood-opacity=".22"/>
       </filter>
       <filter id="shadow-light" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="5" dy="8" stdDeviation="8" flood-color="#020804" flood-opacity="0.4"/>
+        <feDropShadow dx="5" dy="8" stdDeviation="8" flood-color="#16332b" flood-opacity=".14"/>
       </filter>
     </defs>
 
-    <path d="M-100,-100 L1100,-200 C1100,-200 900,400 650,650 C400,900 -200,1100 -200,1100 L-100,1100 Z" fill="#d4ded7" filter="url(#shadow-deep)"/>
-    <path d="M-100,-100 L1000,-150 C1000,-150 820,350 580,590 C340,830 -150,1050 -150,1050 L-100,1100 Z" fill="#ebf0ed" filter="url(#shadow-mid)"/>
-    <path d="M-100,-100 L880,-100 C880,-100 740,300 500,540 C260,780 -100,1000 -100,1000 Z" fill="#ffffff" filter="url(#shadow-light)"/>
+    <path d="M-100,-100 L1100,-200 C1100,-200 900,400 650,650 C400,900 -200,1100 -200,1100 L-100,1100 Z"
+          fill="#d4e3dc" filter="url(#shadow-deep)"/>
+    <path d="M-100,-100 L1000,-150 C1000,-150 820,350 580,590 C340,830 -150,1050 -150,1050 L-100,1100 Z"
+          fill="#eaf2ee" filter="url(#shadow-mid)"/>
+    <path d="M-100,-100 L880,-100 C880,-100 740,300 500,540 C260,780 -100,1000 -100,1000 Z"
+          fill="#ffffff" filter="url(#shadow-light)"/>
   </svg>
 </div>
 
-<!-- Interface do Aplicativo -->
 <main class="main-wrapper">
   <div class="glass-card">
-    
-    <!-- Ícone com tratamento aprimorado e fallback automático se o arquivo local não carregar -->
+
+    <!-- Ícone oficial 192x192 do Make Progress -->
     <div class="app-icon-container">
-      <img id="appIconImg" src="icon-192.png" alt="App Logo" onerror="handleImageError()">
-      <div id="appIconFallback" class="app-icon-fallback">
-        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-          <polyline points="17 6 23 6 23 12"></polyline>
-        </svg>
-      </div>
+      <img
+        id="appIconImg"
+        src="icon-192.png"
+        alt="Make Progress"
+        width="192"
+        height="192"
+        fetchpriority="high"
+        decoding="async"
+      >
     </div>
 
     <h1 class="title">Make Progress</h1>
@@ -268,7 +344,7 @@
 
     <div class="status-input-pill">
       <span class="status-text" id="statusMsg">Autenticando...</span>
-      <div class="spinner" id="spinner"></div>
+      <div class="spinner" id="spinner" aria-hidden="true"></div>
     </div>
 
     <a id="btnOpen" class="btn-primary" href="#" target="_top">Acessar App</a>
@@ -277,12 +353,6 @@
 </main>
 
 <script>
-// Tratamento de erro robusto para exibir o ícone vetorial caso o arquivo png não exista no ambiente de teste
-function handleImageError() {
-  document.getElementById('appIconImg').style.display = 'none';
-  document.getElementById('appIconFallback').style.display = 'flex';
-}
-
 // ══════════════════════════════════════════════
 // CONFIGURAÇÃO — URL do Web App GAS
 // ══════════════════════════════════════════════
@@ -295,7 +365,9 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
 
   btn.href = GAS_URL;
 
-  const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isPWA =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
 
   function executeRedirect() {
     try {
@@ -316,7 +388,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
 
   setTimeout(() => {
     spinner.style.display = 'none';
-    
+
     if (!isPWA) {
       msg.textContent = 'Adicione à tela inicial';
     } else {
@@ -324,16 +396,18 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
     }
 
     btn.style.display = 'block';
-    
+
     let seconds = 4;
+
     const updateButtonText = () => {
       btn.textContent = `Acessar App (${seconds}s)`;
     };
-    
+
     updateButtonText();
-    
+
     const countdown = setInterval(() => {
       seconds--;
+
       if (seconds > 0) {
         updateButtonText();
       } else {
@@ -344,7 +418,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhTyTUDr0EqPrGKsy8ymV7
         executeRedirect();
       }
     }, 1000);
-    
+
   }, 1200);
 })();
 
